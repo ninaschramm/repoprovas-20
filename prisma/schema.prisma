@@ -9,3 +9,71 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Users {
+	id Int @id @default(autoincrement())
+	email String @unique
+	password String
+
+  @@map("users")
+}
+
+model Categories {
+	id Int @id @default(autoincrement())
+	name String @unique
+  tests Tests[]
+
+  @@map("categories")
+}
+
+
+model Teachers {
+	id Int @id @default(autoincrement())
+	name String @unique
+  teacherDiscipline Teachers_Disciplines[]
+
+  @@map("teachers")
+}
+
+
+model Terms {
+	id Int @id @default(autoincrement())
+	number Int @unique
+  disciplines Disciplines[]
+
+  @@map("terms")
+}
+
+model Disciplines {
+	id Int @id @default(autoincrement())
+	name String @unique
+  termId Int 
+  terms Terms @relation(fields: [termId], references: [id])
+  teacherDiscipline Teachers_Disciplines[]
+
+  @@map("disciplines")
+}
+
+model Teachers_Disciplines {
+	id Int @id @default(autoincrement())
+	name String @unique
+  tests Tests[]
+  teacherId Int
+  DisciplineId Int
+  teacher Teachers @relation(fields: [teacherId], references: [id])
+  discipline Disciplines @relation(fields: [DisciplineId], references: [id])
+
+  @@map("teachersDisciplines")
+}
+
+model Tests {
+	id Int @id @default(autoincrement())
+	name String @unique
+  categoryId Int
+  teacherDiscplineId Int
+  category Categories @relation(fields: [categoryId], references: [id])
+  teacherDiscipline Teachers_Disciplines @relation(fields: [teacherDiscplineId], references: [id])
+
+  @@map("tests")
+}
+
