@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { unauthorizedError } from '../utils/errorUtils'
 dotenv.config();
 
-export async function ValidateToken(req: Request, res: Response, next: NextFunction) {
+export async function validateToken(req: Request, res: Response, next: NextFunction) {
     try {
         const { authorization } = req.headers;
         if (!authorization) throw unauthorizedError('Missing authorization header');

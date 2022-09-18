@@ -38,3 +38,43 @@ export async function insert(test: testData) {
         data: test
     });
 }
+
+export async function getTestsByDiscipline() {
+    const testsByDiscipline = await client.terms.findMany({
+        select: {
+            id: false,
+            number: true,            
+            disciplines: {
+                select: {
+                    name: true,
+                    id: false,
+                    termId: false,
+                    teacherDiscipline: {
+                        select: {
+                            teacher: {
+                                select: {
+                                    name: true
+                                }
+                            },
+                            tests: {
+                                distinct: ['categoryId'],
+                                select: {
+                                   category: {
+                                    select: {
+                                        name: true,
+                                        tests: {
+                                            select: {
+                                                name: true
+                                            }
+                                        }
+                                    }
+                                   }
+                                }
+                            }
+                        }
+                    }
+                }}
+        }        
+    })
+    return testsByDiscipline
+}

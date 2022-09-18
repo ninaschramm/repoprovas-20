@@ -30,3 +30,21 @@ export async function registerTest(test: any) {
 
     await testRepository.insert(testData)
 }
+
+export async function getTestsByDiscipline() {
+    const testsList = await testRepository.getTestsByDiscipline()
+
+    for (let periodo of testsList) {
+        for (let discipline of periodo.disciplines) {
+            for (let teacherDiscipline of discipline.teacherDiscipline) {
+                let teacher = teacherDiscipline.teacher.name
+                for (let test of teacherDiscipline.tests) {
+                    for (let testName of test.category.tests)
+                    testName.name = `${testName.name} (${teacher})`
+                }
+            }
+        }
+    }
+
+    return testsList
+}
