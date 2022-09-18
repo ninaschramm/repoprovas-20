@@ -48,3 +48,20 @@ export async function getTestsByDiscipline() {
 
     return testsList
 }
+
+export async function getTestsByTeacher() {
+    const testsList = await testRepository.getTestsByTeacher()
+
+    for (let teacher of testsList) {
+        for (let teacherDiscipline of teacher.teacherDiscipline) {
+            let discipline = teacherDiscipline.discipline.name
+            for (let test of teacherDiscipline.tests) {
+                for (let testName of test.category.tests)
+                    testName.name = `${testName.name} (${discipline})`
+                
+            }
+        }
+    }
+    
+    return testsList
+}
