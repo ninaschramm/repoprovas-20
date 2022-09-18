@@ -11,6 +11,6 @@ const testRouter = Router();
 
 testRouter.post("/tests", validateToken, validateSchema(testSchema), registerTest);
 testRouter.get("/testsByDiscipline", validateToken, getTestsByDiscipline)
-testRouter.get("/testsByTeacher", getTestsByTeacher)
+testRouter.get("/testsByTeacher", validateToken, getTestsByTeacher)
 
 export default testRouter;

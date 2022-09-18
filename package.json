@@ -6,9 +6,12 @@
     "node": "16.x"
   },
   "main": "index.js",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "start": "ts-node dist/server.js",
-    "test": "jest --no-cache",
+    "test": "dotenv -e .env.test prisma migrate dev && dotenv -e .env.test prisma db seed && dotenv -e .env.test jest",
     "build": "tsc && npx prisma migrate deploy",
     "dev": "nodemon src/server.ts"
   },
@@ -16,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/cryptr": "^4.0.1",
@@ -39,6 +43,7 @@
     "cors": "^2.8.5",
     "cryptr": "^6.0.3",
     "dotenv": "^16.0.2",
+    "dotenv-cli": "^6.0.0",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
     "joi": "^17.6.0",
