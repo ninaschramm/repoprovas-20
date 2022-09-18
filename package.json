@@ -7,7 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "ts-node dist/server.js",
     "test": "jest --no-cache",
     "build": "tsc && npx prisma migrate deploy",
     "dev": "nodemon src/server.ts"

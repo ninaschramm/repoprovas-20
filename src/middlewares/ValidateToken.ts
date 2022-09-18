@@ -9,19 +9,16 @@ export async function ValidateToken(req: Request, res: Response, next: NextFunct
         const { authorization } = req.headers;
         if (!authorization) throw unauthorizedError('Missing authorization header');
 
-        const token = authorization?.replace("Bearer ", "");
+        const token = authorization?.replace("Bearer ", "");        
+        if (!token) throw unauthorizedError('Missing token');
 
-        if (!token) {
-            return res.sendStatus(401);
-        }
-
-        const data: any = jwt.verify(token, process.env.JWT_SECRET);
+        const data: any = jwt.verify(token, process.env.TOKEN_SECRET);
 
         if (data) {
             res.locals.id = data.id;
-            next();
+            next();            
         } else {
-            return res.status(401).send("Erro ao validar o usuário");
+            throw unauthorizedError('Impossible to authenticate user')
         }
 
     } catch (error) {

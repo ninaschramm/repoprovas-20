@@ -2,8 +2,7 @@ import { Router } from "express";
 
 import { userSchema, createUserSchema } from "../schemas/authSchemas";
 
-import { createUser } from "../controllers/authControllers";
-import { signIn } from "../controllers/authControllers";
+import { createUser, signIn } from "../controllers/authControllers";
 
 import { validateSchema } from "../middlewares/ValidateSchema";
 
