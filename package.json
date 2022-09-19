@@ -10,9 +10,9 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "start": "ts-node dist/src/server.ts",
     "test": "dotenv -e .env.test prisma migrate dev && dotenv -e .env.test prisma db seed && dotenv -e .env.test jest",
     "build": "tsc && npx prisma migrate deploy",
+    "start": "node dist/src/server.ts",
     "dev": "nodemon src/server.ts"
   },
   "keywords": [],
