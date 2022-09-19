@@ -91,26 +91,48 @@ export async function getTestsByDiscipline() {
 }
 
 export async function getTestsByTeacher() {
-    const testsList = await testRepository.getTestsByTeacher()
 
-    for (let teacher of testsList) {
-        for (let teacherDiscipline of teacher.teacherDiscipline) {
-            let id = teacherDiscipline.id;
-            for (let test of teacherDiscipline.tests) {         
-                for (let testName of test.category.tests) {                                       
-                    if (testName.teacherDisciplineId !== id) {                    
-                        let i = test.category.tests.indexOf(testName)
-                        test.category.tests.splice(i, 1)
-                    }   
-                    else {
-                        let discipline = testName.teacherDiscipline.discipline.name;     
-                        testName.name = `${testName.name} (${discipline})`   
-                        delete testName.teacherDiscipline  
+    let teachers = [];
+
+    const teacherList = await testRepository.getTeachers()
+
+    for (let teacher of teacherList) {
+        let categories = [];
+        teachers.push({
+            name: teacher.name,
+            categories: categories
+        })
+     }
+    
+    const testList = await testRepository.getTests()
+
+    for (let test of testList) {
+        for (let teacher of teachers) {
+                let tests = []
+                if (teacher.name == test.teacher.name) {
+                    if (!teacher.categories.find(e => e.name === test.category.name)) {
+                        teacher.categories.push({
+                            name: test.category.name,
+                            tests: tests
+                        })
                     }
                 }
-            }
+            }            
         }
-    }
+
+
+        for (let test of testList) {
+            for (let teacher of teachers) {
+                for (let category of teacher.categories) {
+                    if (category.name == test.category.name) {
+                    category.tests.push({
+                        testname: `${test.name} (${test.discipline.name})`
+                    })
+                    }
+            }
+            }        
+        }
     
-    return testsList
+    return teachers
+    
 }

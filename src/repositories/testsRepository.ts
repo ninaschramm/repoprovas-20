@@ -82,6 +82,15 @@ export async function getCategories(){
     return categories
 }
 
+export async function getTeachers() {
+    const teachers = await client.teachers.findMany({
+        select: {
+            name: true
+        }
+    })
+    return teachers
+}
+
 export async function getTestsByDiscipline() {
     const testsByDiscipline = await client.terms.findMany({
         select: {
