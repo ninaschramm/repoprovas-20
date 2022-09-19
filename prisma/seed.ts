@@ -3,8 +3,13 @@ import { client } from '../src/database/prisma';
 
 async function main() {
 
-    const checkTables = await client.terms.findMany(); //checks if the db was populated already
-    if (!checkTables) {
+    const checkTerms = await client.terms.findMany(); //checks if the db was populated already
+    const checkCategories = await client.categories.findMany();
+    const checkTeachers = await client.teachers.findMany();
+    const checkDisciplines = await client.disciplines.findMany();
+    const checkTeachersDisciplines = await client.teachers_Disciplines.findMany(); // one for each because of possible errors
+    
+    if (checkTerms.length === 0) {
         await client.terms.createMany(
             {
             data: [
@@ -17,6 +22,9 @@ async function main() {
             ]
             }
         )
+        }
+
+    if (checkCategories.length === 0) {
 
         await client.categories.createMany(
             {
@@ -27,6 +35,20 @@ async function main() {
             ]
             }
         )
+    }
+
+    if (checkTeachers.length === 0) {
+        await client.teachers.createMany(
+            {
+            data: [
+                {name: "Diego Pinho"},
+                {name: "Bruna Hamori"}
+            ]
+            }
+        )
+    }
+
+    if (checkDisciplines.length === 0) {
 
         await client.disciplines.createMany(
             {
@@ -40,6 +62,9 @@ async function main() {
             ]
             }
         )
+    }
+
+    if (checkTeachersDisciplines.length === 0) {
 
         await client.teachers_Disciplines.createMany(
             {
