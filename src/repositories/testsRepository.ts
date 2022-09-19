@@ -39,6 +39,49 @@ export async function insert(test: testData) {
     });
 }
 
+export async function getTests(){
+    const tests = await client.tests.findMany({   
+        select: {
+            name: true,
+            category: {
+                select: {
+                    name: true
+                }
+            },
+            teacher: {
+                select: {
+                    name: true
+                }
+            },
+            discipline: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    })
+    return tests
+}
+
+export async function getDisciplines(){
+    const terms = await client.terms.findMany({
+        select: {
+            number: true,
+            disciplines: true
+        }
+    })
+    return terms
+}
+
+export async function getCategories(){
+    const categories = await client.categories.findMany({
+        select: {
+            name: true
+        }
+    })
+    return categories
+}
+
 export async function getTestsByDiscipline() {
     const testsByDiscipline = await client.terms.findMany({
         select: {
@@ -47,35 +90,26 @@ export async function getTestsByDiscipline() {
             disciplines: {
                 select: {
                     name: true,
-                    id: false,
-                    termId: false,
-                    teacherDiscipline: {
+                    tests: {
+                        distinct: ['categoryId'],
                         select: {
-                            teacher: {
+                            name: true,
+                            category: {
                                 select: {
                                     name: true
                                 }
                             },
-                            tests: {
-                                distinct: ['categoryId'],
+                            teacher: {
                                 select: {
-                                   category: {
-                                    select: {
-                                        name: true,
-                                        tests: {
-                                            select: {
-                                                name: true
-                                            }
-                                        }
-                                    }
-                                   }
+                                    name: true
                                 }
                             }
                         }
                     }
-                }}
-        }        
-    })
+                        }
+                    }
+                }
+        })
     return testsByDiscipline
 }
 
@@ -85,6 +119,7 @@ export async function getTestsByTeacher() {
             name: true,
             teacherDiscipline: {
                 select: {
+                    id: true,
                     discipline: {
                         select: {
                             name: true
@@ -98,7 +133,16 @@ export async function getTestsByTeacher() {
                                         name: true,
                                         tests: {
                                             select: {
-                                                name: true
+                                                name: true,
+                                                teacherDisciplineId: true,
+                                                teacherDiscipline: {
+                                                    select: {
+                                                        discipline: {
+                                                            select: {
+                                                                name: true}
+                                                            }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
